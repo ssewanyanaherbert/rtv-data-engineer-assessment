@@ -1,10 +1,10 @@
 name: rtv-survey
 
 x-airflow-common: &airflow-common
-  build:
-    context: .
-    dockerfile: docker/airflow/Dockerfile
+  # Built once by airflow-init and reused by the other Airflow services
+  # (building the same tag from several services at once fails with "image already exists").
   image: rtv-survey-airflow:3.1.8
+  pull_policy: never
   user: "${AIRFLOW_UID:-50000}:0"
   environment: &airflow-env
     AIRFLOW__CORE__EXECUTOR: LocalExecutor
@@ -57,6 +57,10 @@ services:
 
   airflow-init:
     <<: *airflow-common
+    build:
+      context: .
+      dockerfile: docker/airflow/Dockerfile
+    pull_policy: build
     command: ["bash", "-c", "airflow db migrate && python -m rtv_pipeline init"]
     restart: "no"
 
