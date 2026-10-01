@@ -6,10 +6,15 @@ Writes reports/pipeline_report.md plus CSV extracts that can be attached to a re
 from __future__ import annotations
 
 import csv
+import logging
 from datetime import datetime
+
+import psycopg
 
 from rtv_pipeline import warehouse
 from rtv_pipeline.settings import get_settings
+
+log = logging.getLogger(__name__)
 
 QUERIES = {
     "row_counts": """
@@ -127,6 +132,16 @@ def fetch(conn, name: str):
     return [d.name for d in cur.description], cur.fetchall()
 
 
+def try_fetch(conn, name: str):
+    """Fetch a section, or None when its tables do not exist yet (e.g. an upstream step failed)."""
+    try:
+        return fetch(conn, name)
+    except psycopg.errors.UndefinedTable as exc:
+        conn.rollback()
+        log.warning("Report section %s skipped: %s", name, str(exc).splitlines()[0])
+        return None
+
+
 def run() -> None:
     out_dir = get_settings().reports_dir
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -135,15 +150,24 @@ def run() -> None:
             "# RTV Household Survey Pipeline - Run Report\n",
             f"Run `{warehouse.run_id()}` - generated {datetime.now():%Y-%m-%d %H:%M}\n",
         ]
+        skipped = []
         for title, name in SECTIONS:
-            cols, rows = fetch(conn, name)
-            parts.append(f"\n## {title}\n\n{markdown_table(cols, rows)}")
+            result = try_fetch(conn, name)
+            if result is None:
+                skipped.append(name)
+                parts.append(f"\n## {title}\n\n_Not available: an upstream step did not complete._\n")
+            else:
+                parts.append(f"\n## {title}\n\n{markdown_table(*result)}")
         (out_dir / "pipeline_report.md").write_text("".join(parts), encoding="utf-8")
 
         for name in CSV_EXPORTS:
-            cols, rows = fetch(conn, name)
+            result = try_fetch(conn, name)
+            if result is None:
+                continue
+            cols, rows = result
             with open(out_dir / f"{name}.csv", "w", newline="", encoding="utf-8") as fh:
                 writer = csv.writer(fh)
                 writer.writerow(cols)
                 writer.writerows(rows)
-        stats["files"] = ["pipeline_report.md"] + [f"{n}.csv" for n in CSV_EXPORTS]
+        stats["files"] = ["pipeline_report.md"] + [f"{n}.csv" for n in CSV_EXPORTS if n not in skipped]
+        stats["skipped_sections"] = skipped
