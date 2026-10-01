@@ -1,0 +1,134 @@
+# Conformed Silver schema and where each field comes from in every survey cycle.
+#
+# sources: candidate export columns, first match wins. Matching ignores case and
+#          punctuation, so "GPS-Latitude" and "gps_latitude" resolve to the same field.
+#          Use a mapping keyed by cycle code when a cycle renamed the variable.
+# type:    string | int | double | timestamp
+# decode:  form field whose choice list labels the coded value (per cycle).
+# required: the run fails if no candidate exists in a cycle's export.
+
+fields:
+  submission_key:
+    type: string
+    required: true
+    sources: [KEY]
+    description: SurveyCTO submission UUID
+  instance_id:
+    type: string
+    sources: [instanceID]
+  submission_ts:
+    type: timestamp
+    required: true
+    sources: [SubmissionDate]
+    description: Server receive time of the submission
+  start_ts:
+    type: timestamp
+    sources: [starttime]
+  end_ts:
+    type: timestamp
+    sources: [endtime]
+  form_version:
+    type: string
+    sources: [formdef_version, version]
+  duration_sec:
+    type: double
+    sources: [duration]
+    description: Interview duration in seconds as recorded by SurveyCTO
+
+  household_id:
+    type: string
+    required: true
+    sources: [hhid_2]
+    description: Household ID entered from the tracking sheet
+  household_id_confirm:
+    type: string
+    sources: [hhid_2_again]
+  surveyor:
+    type: string
+    sources: [Surveyor_Name, Surveyor_Name2, surveyor_id, enumerator]
+
+  district_code:
+    type: int
+    sources: [district]
+    decode: district
+    description: District selected on the form (choice codes differ between cycles)
+  district_preload:
+    type: string
+    sources: [pre_district]
+    description: District preloaded from the tracking sheet
+  subcounty:
+    type: string
+    sources: [pre_subcounty]
+  parish:
+    type: string
+    sources: [pre_parish]
+  village:
+    type: string
+    sources: [pre_village]
+  cluster:
+    type: string
+    sources: [Pre_cluster, pre_cluster]
+
+  interview_status_code:
+    type: int
+    required: true
+    sources: [status]
+    decode: status
+  track_status:
+    type: string
+    sources: [track_status]
+    description: Target or Reserve household (Year 2 only)
+  consent_participate:
+    type: int
+    sources: [consent_1]
+  consent_followup:
+    type: int
+    sources: [consent_2]
+  refusal_reason_code:
+    type: int
+    sources: [refusing]
+    decode: refusing
+
+  respondent_type_code:
+    type: int
+    sources: [respondent]
+    decode: respondent
+  respondent_sex_code:
+    type: int
+    sources: [respondent_sex]
+    decode: respondent_sex
+  hhh_sex_code:
+    type: int
+    sources: [hhh_sex]
+    decode: hhh_sex
+  hhh_age:
+    type: int
+    sources: [hhh_age]
+  hhh_marital_status_code:
+    type: int
+    sources: [hhh_marital_status]
+    decode: hhh_marital_status
+  hhh_education_code:
+    type: int
+    sources: [hhh_educ_level]
+    decode: hhh_educ_level
+  hh_size:
+    type: int
+    sources: [tot_hhmembers, hh_size]
+
+  gps_latitude:
+    type: double
+    sources: [GPS-Latitude, GPS_Latitude, gps_latitude]
+  gps_longitude:
+    type: double
+    sources: [GPS-Longitude, GPS_Longitude, gps_longitude]
+  gps_accuracy:
+    type: double
+    sources: [GPS-Accuracy, GPS_Accuracy, gps_accuracy]
+
+  income_consumption_usd_day_aeq:
+    type: double
+    sources:
+      - HH Income + Consumption + Assets + Residues / Day (USD_adult_equiv_adj)
+      - HH Income + Consumption + Residues/Day (USD_adult_equiv_adj)
+    description: Household income and consumption per adult equivalent per day (USD PPP)

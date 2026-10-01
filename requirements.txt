@@ -1,0 +1,9 @@
+# Installed on top of the Airflow image with the Airflow constraints file (see docker/airflow/Dockerfile).
+pyspark==4.1.1
+psycopg[binary]==3.2.3
+pandas
+pyarrow
+beautifulsoup4
+lxml
+PyYAML
+pytest

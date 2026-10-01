@@ -1,0 +1,37 @@
+paths:
+  data_dir: ${DATA_DIR:-data}
+  lake_dir: ${LAKE_DIR:-lake}
+  reports_dir: ${REPORTS_DIR:-reports}
+
+cycles:
+  - code: baseline
+    name: Baseline
+    order: 1
+    source_file: 01_baseline.csv
+    form_file: ahs_2021_baseline.html
+  - code: year1
+    name: Year 1 Follow-up
+    order: 2
+    source_file: 02_year_one.csv
+    form_file: ahs_2021_year1.html
+  - code: year2
+    name: Year 2 Follow-up
+    order: 3
+    source_file: 03_year_two.csv
+    form_file: ahs_2021_year2.html
+
+spark:
+  master: ${SPARK_MASTER:-local[*]}
+  driver_memory: ${SPARK_DRIVER_MEMORY:-2g}
+  shuffle_partitions: 8
+
+rules:
+  # Interviews longer than this are kept but excluded from duration averages.
+  max_plausible_duration_min: 240
+  # Bounding box for Uganda used to validate GPS fixes.
+  gps_bounds:
+    lat_min: -1.6
+    lat_max: 4.3
+    lon_min: 29.5
+    lon_max: 35.1
+  household_id_pattern: '^[A-Z]{3}-[A-Z]{3}-[A-Z]{3}-[A-Z][0-9]+$'

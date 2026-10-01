@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+ <body>
+  <table>
+   <tr class="entryRow">
+    <td><div><table class="table borderless"><tbody><tr>
+     <td class="spacer"></td>
+     <td class="fieldCell"><span>district <span class="required">(required)</span> </span></td>
+    </tr></tbody></table></div></td>
+    <td class="questionCell">Select which district you are in</td>
+    <td>
+     <table class="table table-bordered table-condensed"><tbody>
+      <tr><td class="response-note-cell"></td><td>1</td><td><span>Kisoro</span></td></tr>
+      <tr><td class="response-note-cell"></td><td>2</td><td><span>Kanungu</span></td></tr>
+     </tbody></table>
+    </td>
+   </tr>
+   <tr class="gray entryRow">
+    <td><div><table class="table borderless"><tbody><tr>
+     <td class="fieldCell"><span>hhh_age <span class="required">(required)</span> </span></td>
+    </tr></tbody></table></div></td>
+    <td class="questionCell">Household head Age <p class="constraint">Response constrained to: .&gt;=13 and .&lt;=120</p></td>
+    <td class="answerCell response-note-cell"></td>
+   </tr>
+   <tr class="entryRow">
+    <td><div><table class="table borderless"><tbody><tr>
+     <td class="fieldCell"><span>member_age</span></td>
+    </tr></tbody></table></div></td>
+    <td class="questionCell">Age of [member_name] <p class="relevance">Question relevant when: ${tot_hhmembers} &gt; 1</p></td>
+    <td class="answerCell response-note-cell"></td>
+   </tr>
+   <tr class="entryRow">
+    <td><div><table class="table borderless"><tbody><tr>
+     <td class="fieldCell"><span>member_age</span></td>
+    </tr></tbody></table></div></td>
+    <td class="questionCell">Age of [member_name]</td>
+    <td class="answerCell response-note-cell"></td>
+   </tr>
+  </table>
+ </body>
+</html>

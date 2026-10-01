@@ -1,0 +1,16 @@
+[project]
+name = "rtv-survey-pipeline"
+version = "1.0.0"
+description = "Three-cycle household survey pipeline: PySpark lake, Postgres warehouse, Airflow orchestration"
+requires-python = ">=3.11"
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["rtv_pipeline"]
+known-local-folder = ["conftest", "data", "metrics"]

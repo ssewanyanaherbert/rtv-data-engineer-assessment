@@ -1,0 +1,25 @@
+# Survey exports and forms are confidential - never commit them
+data/*
+!data/.gitkeep
+
+# Generated
+lake/*
+!lake/.gitkeep
+reports/*
+!reports/.gitkeep
+
+# Secrets
+.env
+
+# Python / tooling
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+spark-warehouse/
+metastore_db/
+derby.log
+.idea/
+.vscode/
