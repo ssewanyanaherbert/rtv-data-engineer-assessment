@@ -95,9 +95,9 @@ def get_variable_map() -> dict:
 
 def warehouse_dsn() -> str:
     return (
-        f"host={os.environ.get('WAREHOUSE_HOST', 'localhost')} "
-        f"port={os.environ.get('WAREHOUSE_PORT', '5432')} "
-        f"dbname={os.environ.get('WAREHOUSE_DB', 'rtv_warehouse')} "
-        f"user={os.environ.get('WAREHOUSE_USER', 'rtv')} "
-        f"password={os.environ.get('WAREHOUSE_PASSWORD', '')}"
+        f"host={os.environ.get('DB_HOST', 'localhost')} "
+        f"port={os.environ.get('DB_PORT', '5432')} "
+        f"dbname={os.environ.get('DB_NAME', 'rtv_warehouse')} "
+        f"user={os.environ.get('DB_USER', 'rtv')} "
+        f"password={os.environ.get('DB_PASSWORD', '')}"
     )
